@@ -1,6 +1,8 @@
 from flask import Flask,render_template
 import requests
+import pandas as pd
 
+df=pd.read_csv("dictionary.csv")
 
 app=Flask(__name__)
 
@@ -10,9 +12,7 @@ def home():
 
 @app.route("/api/v1/<word>")
 def translate(word):
-    response=requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}")
-    data=response.json()
-    translation=data[0]['meanings'][0]['definitions'][0]['definition']
+    translation=str(df.loc[df['word']==word]['definition'].squeeze())
     return{
             "Translation": translation,
             "Word": word
